@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"math/rand"
 	"os"
@@ -14,6 +15,10 @@ import (
 func main() {
 	rand.Seed(time.Now().Unix())
 	args := os.Args[1:]
+	if len(args) == 0 {
+		fmt.Println("Usage: producer <topic> <number of messages>")
+		os.Exit(0)
+	}
 
 	var wg sync.WaitGroup
 	producer, _ := sarama.NewAsyncProducer([]string{"localhost:9092"}, nil)
