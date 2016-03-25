@@ -2,13 +2,18 @@ package main
 
 import (
 	"log"
+	"math/rand"
+	"os"
 	"strconv"
 	"sync"
+	"time"
 
 	"github.com/Shopify/sarama"
 )
 
 func main() {
+	rand.Seed(time.Now().Unix())
+	args := os.Args[1:]
 
 	var wg sync.WaitGroup
 	producer, _ := sarama.NewAsyncProducer([]string{"localhost:9092"}, nil)
@@ -21,9 +26,11 @@ func main() {
 		}
 	}()
 
-	for i := 0; i < 100; i++ {
-		message := &sarama.ProducerMessage{Topic: "poc4", Value: sarama.StringEncoder(strconv.Itoa(i))}
+	numberOfMessages, _ := strconv.Atoi(args[1])
+	for i := 0; i < numberOfMessages; i++ {
+		message := &sarama.ProducerMessage{Topic: args[0], Value: sarama.StringEncoder(strconv.Itoa(i))}
 		producer.Input() <- message
+		time.Sleep(time.Duration(rand.Int31n(10)) * time.Millisecond)
 	}
 
 	producer.AsyncClose()

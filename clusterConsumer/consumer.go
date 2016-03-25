@@ -13,7 +13,7 @@ func main() {
 	rand.Seed(time.Now().Unix())
 	args := os.Args[1:]
 
-	consumer, err := cluster.NewConsumer([]string{"localhost:9092"}, "group1", []string{"poc4"}, nil)
+	consumer, err := cluster.NewConsumer([]string{"localhost:9092"}, "group1", []string{args[1]}, nil)
 	if err != nil {
 		log.Fatalln(err)
 	}
